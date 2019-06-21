@@ -90,7 +90,6 @@ export default {
     $route: {
       handler: function(route) {
         this.redirect = route.query && route.query.redirect
-        console.error('login handler: ' + this.redirect)
       },
       immediate: true
     }
