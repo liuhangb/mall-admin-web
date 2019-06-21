@@ -17,12 +17,11 @@ export default {
     const vnodes = []
 
     if (icon) {
-        console.log("item svg-icon: " + icon)
+      console.log("item svg-icon: " + icon)
       vnodes.push(<svg-icon icon-class={icon}/>)
     }
 
     if (title) {
-        console.log("item title: " + title)
       vnodes.push(<span slot='title'>{(title)}</span>)
     }
     return vnodes
