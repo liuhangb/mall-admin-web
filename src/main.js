@@ -2,7 +2,7 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
-import '@/permission'
+// import '@/permission'
 import '@/styles/index.scss' // global css
 import '@/icons' // icon
 import ElementUI from 'element-ui'
