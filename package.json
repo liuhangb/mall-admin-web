@@ -23,6 +23,7 @@
     "runjs": "^4.4.2",
     "sass-loader": "^7.1.0",
     "serve-static": "^1.14.1",
+    "tinymce": "^5.0.9",
     "v-charts": "^1.19.0",
     "vue": "^2.6.10",
     "vue-router": "latest",

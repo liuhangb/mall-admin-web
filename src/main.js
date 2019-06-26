@@ -12,7 +12,9 @@ import 'element-ui/lib/theme-chalk/index.css'
 
 import 'normalize.css/normalize.css' // A modern alternative to CSS resets
 import VCharts from 'v-charts'
+import tinymce from "tinymce/tinymce";
 
+Vue.use(tinymce);
 
 Vue.use(VCharts)
 
