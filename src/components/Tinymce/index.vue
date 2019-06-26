@@ -1,19 +1,18 @@
 <template>
   <div class="tinymce-container editor-container">
-    <editor v-model="myValue"
+    <editor v-model="editorValue"
             :init="init"
             :disabled="disabled"
             @onClick="onClick">
     </editor>
-    <div class="editor-custom-btn-container">
-      <editorImage color="#1890ff" class="editor-upload-btn" @successCBK="imageSuccessCBK"></editorImage>
-    </div>
+<!--    <div class="editor-custom-btn-container">-->
+<!--      <editorImage color="#1890ff" class="editor-upload-btn" @successCBK="imageSuccessCBK"></editorImage>-->
+<!--    </div>-->
   </div>
 </template>
 
 <script type="text/javascript">
   import editorImage from './components/editorImage'
-  // import '../../../static/tinymce/langs/zh_CN'
 
   import tinymce from 'tinymce/tinymce'
   import Editor from '@tinymce/tinymce-vue'
@@ -23,7 +22,7 @@
   import 'tinymce/plugins/table'// 插入表格插件
   import 'tinymce/plugins/lists'// 列表插件
   import 'tinymce/plugins/wordcount'// 字数统计插件
-
+  import 'tinymce/plugins/advlist'
   export default {
     name: 'tinymce',
     components: {
@@ -31,20 +30,10 @@
       Editor
     },
     props: {
-      id: {
-        type: String
-      },
       value: {
         type: String,
         default: ''
       },
-      // toolbar: {
-      //   type: Array,
-      //   required: false,
-      //   default() {
-      //     return []
-      //   }
-      // },
       height: {
         type: Number,
         required: false,
@@ -61,11 +50,14 @@
       },
       plugins: {
         type: [String, Array],
-        default: 'lists image media table wordcount'
+        default: `advlist anchor autolink autosave code codesample colorpicker colorpicker
+  contextmenu directionality emoticons fullscreen hr image imagetools importcss insertdatetime
+  legacyoutput link lists media nonbreaking noneditable pagebreak paste preview print save searchreplace
+  spellchecker tabfocus table template textcolor textpattern visualblocks visualchars wordcount`
       },
       toolbar: {
         type: [String, Array],
-        default: 'undo redo |  formatselect | bold italic forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | lists image media table | removeformat'
+        default: `bold italic underline strikethrough alignleft aligncenter alignright outdent indent  blockquote undo redo removeformat hr bullist numlist link image charmap	 preview anchor pagebreak fullscreen insertdatetime media table forecolor backcolor`
       }
     },
     data() {
@@ -90,15 +82,18 @@
             success(img)
           }
         },
-        myValue: this.value
+        editorValue: this.value
       }
     },
     watch: {
-      value (newValue) {
-        this.myValue = newValue
+      value(newValue) {
+        this.editorValue = newValue
+        console.log('value: ' + newValue)
       },
-      myValue (newValue) {
+
+      editorValue(newValue) {
         this.$emit('input', newValue)
+        console.log('editorValue: ' + newValue)
       }
     },
     mounted() {

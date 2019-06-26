@@ -47,6 +47,41 @@ export const constantRoutes = [
             component: () => import('@/views/commodity/brandManage/index'),
             meta: { title: '品牌管理', icon: 'brandManage' }
         },
+         {
+                path: 'updateProductCate',
+                name: 'updateProductCate',
+                component: () => import('@/views/commodity/updateProductCate/index'),
+                meta: {title: '修改商品分类'},
+                hidden: true
+            },
+            {
+                path: 'productAttrList',
+                name: 'productAttrList',
+                component: () => import('@/views/commodity/productAttr/index'),
+                meta: {title: '商品属性列表'},
+                hidden: true
+            },
+            {
+                path: 'addProductAttr',
+                name: 'addProductAttr',
+                component: () => import('@/views/commodity/addProductAttr/index'),
+                meta: {title: '添加商品属性'},
+                hidden: true
+            },
+            {
+                path: 'updateProductAttr',
+                name: 'updateProductAttr',
+                component: () => import('@/views/commodity/updateProductAttr/index'),
+                meta: {title: '修改商品属性'},
+                hidden: true
+            },
+            {
+                path: 'updateBrand',
+                name: 'updateBrand',
+                component: () => import('@/views/commodity/updateBrand/index'),
+                meta: {title: '编辑品牌'},
+                hidden: true
+            }
         ],
         meta: { title: '商品', icon: 'commodity' }
     },
@@ -120,7 +155,6 @@ export const constantRoutes = [
         }
         ]
     }
-
 ]
 
 const createRouter = () => new Router({
