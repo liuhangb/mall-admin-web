@@ -6,11 +6,15 @@ import store from './store'
 import '@/styles/index.scss' // global css
 import '@/icons' // icon
 import ElementUI from 'element-ui'
-import locale from 'element-ui/lib/locale/lang/en' // lang i18n
+import locale from 'element-ui/lib/locale/lang/zh-CN'
 // 不加这个sideBar 文字显示不出来
 import 'element-ui/lib/theme-chalk/index.css'
 
 import 'normalize.css/normalize.css' // A modern alternative to CSS resets
+import VCharts from 'v-charts'
+
+
+Vue.use(VCharts)
 
 Vue.config.productionTip = true
 

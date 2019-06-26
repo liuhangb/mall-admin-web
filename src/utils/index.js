@@ -1,13 +1,3 @@
-/**
- * Created by PanJiaChen on 16/11/18.
- */
-
-/**
- * Parse the time to string
- * @param {(Object|string|number)} time
- * @param {string} cFormat
- * @returns {string}
- */
 export function parseTime(time, cFormat) {
   if (arguments.length === 0) {
     return null
@@ -17,12 +7,7 @@ export function parseTime(time, cFormat) {
   if (typeof time === 'object') {
     date = time
   } else {
-    if ((typeof time === 'string') && (/^[0-9]+$/.test(time))) {
-      time = parseInt(time)
-    }
-    if ((typeof time === 'number') && (time.toString().length === 10)) {
-      time = time * 1000
-    }
+    if (('' + time).length === 10) time = parseInt(time) * 1000
     date = new Date(time)
   }
   const formatObj = {
@@ -36,8 +21,7 @@ export function parseTime(time, cFormat) {
   }
   const time_str = format.replace(/{(y|m|d|h|i|s|a)+}/g, (result, key) => {
     let value = formatObj[key]
-    // Note: getDay() returns 0 on Sunday
-    if (key === 'a') { return ['日', '一', '二', '三', '四', '五', '六'][value ] }
+    if (key === 'a') return ['一', '二', '三', '四', '五', '六', '日'][value - 1]
     if (result.length > 0 && value < 10) {
       value = '0' + value
     }
@@ -46,17 +30,8 @@ export function parseTime(time, cFormat) {
   return time_str
 }
 
-/**
- * @param {number} time
- * @param {string} option
- * @returns {string}
- */
 export function formatTime(time, option) {
-  if (('' + time).length === 10) {
-    time = parseInt(time) * 1000
-  } else {
-    time = +time
-  }
+  time = +time * 1000
   const d = new Date(time)
   const now = Date.now()
 
@@ -64,8 +39,7 @@ export function formatTime(time, option) {
 
   if (diff < 30) {
     return '刚刚'
-  } else if (diff < 3600) {
-    // less 1 hour
+  } else if (diff < 3600) { // less 1 hour
     return Math.ceil(diff / 60) + '分钟前'
   } else if (diff < 3600 * 24) {
     return Math.ceil(diff / 3600) + '小时前'
@@ -75,36 +49,6 @@ export function formatTime(time, option) {
   if (option) {
     return parseTime(time, option)
   } else {
-    return (
-      d.getMonth() +
-      1 +
-      '月' +
-      d.getDate() +
-      '日' +
-      d.getHours() +
-      '时' +
-      d.getMinutes() +
-      '分'
-    )
+    return d.getMonth() + 1 + '月' + d.getDate() + '日' + d.getHours() + '时' + d.getMinutes() + '分'
   }
-}
-
-/**
- * @param {string} url
- * @returns {Object}
- */
-export function param2Obj(url) {
-  const search = url.split('?')[1]
-  if (!search) {
-    return {}
-  }
-  return JSON.parse(
-    '{"' +
-      decodeURIComponent(search)
-        .replace(/"/g, '\\"')
-        .replace(/&/g, '","')
-        .replace(/=/g, '":"')
-        .replace(/\+/g, ' ') +
-      '"}'
-  )
 }
