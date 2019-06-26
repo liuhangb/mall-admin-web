@@ -1,7 +1,5 @@
 'use strict'
-const utils = require('./utils')
 const path = require('path')
-const CopyWebpackPlugin = require('copy-webpack-plugin')
 
 function resolve(dir) {
   return path.join(__dirname, dir)
@@ -28,18 +26,6 @@ module.exports = {
       alias: {
         '@': resolve('src')
       }
-    },
-    module:{
-      rules:[
-        {
-          test:/\.(woff2?|eot|ttf|otf)(\?.*)$/,
-          loader:'url-loader',
-          options:{
-            limit: 10000,
-            name: utils.assetsPath('fonts/[name].[hash:7].[ext]')
-          }
-        }
-      ]
     },
   },
   chainWebpack(config) {
@@ -68,9 +54,5 @@ module.exports = {
           symbolId: 'icon-[name]'
         })
         .end()
-
-    config.plugins.push(
-        new CopyWebpackPlugin([{ from: path.resolve(__dirname, './static'), to: 'static' }]),
-    )
 }
 }

@@ -1,6 +1,10 @@
 <template>
-  <div class="tinymce-container editor-container" style="background-color: red">
-    <textarea class="tinymce-textarea" :id="tinymceId"></textarea>
+  <div class="tinymce-container editor-container">
+    <editor v-model="myValue"
+            :init="init"
+            :disabled="disabled"
+            @onClick="onClick">
+    </editor>
     <div class="editor-custom-btn-container">
       <editorImage color="#1890ff" class="editor-upload-btn" @successCBK="imageSuccessCBK"></editorImage>
     </div>
@@ -9,39 +13,23 @@
 
 <script type="text/javascript">
   import editorImage from './components/editorImage'
-  import '../../../static/tinymce4.7.5/langs/zh_CN'
-  // import "tinymce/plugins/advlist";//这个到最下面那个为需要使用的工具栏模块
-  // import "tinymce/plugins/anchor";
-  // import "tinymce/plugins/autolink";
-  // import "tinymce/plugins/autosave";
-  // import "tinymce/plugins/code";
-  // import "tinymce/plugins/codesample";
-  // import "tinymce/plugins/colorpicker";
-  // import "tinymce/plugins/colorpicker";
-  // import "tinymce/plugins/contextmenu";
-  // import "tinymce/plugins/directionality";
-  // import "tinymce/plugins/emoticons";
-  // import "tinymce/plugins/hr";
+  // import '../../../static/tinymce/langs/zh_CN'
 
-  const plugins = [
- `advlist anchor autolink autosave code codesample colorpicker colorpicker
-  contextmenu directionality emoticons fullscreen hr image imagetools importcss insertdatetime
-  legacyoutput link lists media nonbreaking noneditable pagebreak paste preview print save searchreplace
-  spellchecker tabfocus table template textcolor textpattern visualblocks visualchars wordcount`
-  ];
-  // const plugins = [
-  //   `advlist anchor autolink autosave code codesample colorpicker colorpicker
-  // contextmenu directionality emoticons fullscreen hr `
-  // ];
-  const toolbar = [
-    `bold italic underline strikethrough alignleft aligncenter
-  alignright outdent indent  blockquote undo redo removeformat`,
-    `hr bullist numlist link image charmap	 preview anchor pagebreak
-    fullscreen insertdatetime media table forecolor backcolor`
-  ];
+  import tinymce from 'tinymce/tinymce'
+  import Editor from '@tinymce/tinymce-vue'
+  import 'tinymce/themes/silver'
+  import 'tinymce/plugins/image'// 插入上传图片插件
+  import 'tinymce/plugins/media'// 插入视频插件
+  import 'tinymce/plugins/table'// 插入表格插件
+  import 'tinymce/plugins/lists'// 列表插件
+  import 'tinymce/plugins/wordcount'// 字数统计插件
+
   export default {
     name: 'tinymce',
-    components: {editorImage},
+    components: {
+      editorImage,
+      Editor
+    },
     props: {
       id: {
         type: String
@@ -50,16 +38,13 @@
         type: String,
         default: ''
       },
-      toolbar: {
-        type: Array,
-        required: false,
-        default() {
-          return []
-        }
-      },
-      menubar: {
-        default: 'file edit insert view format table'
-      },
+      // toolbar: {
+      //   type: Array,
+      //   required: false,
+      //   default() {
+      //     return []
+      //   }
+      // },
       height: {
         type: Number,
         required: false,
@@ -69,20 +54,51 @@
         type: Number,
         required: false,
         default: 720
+      },
+      disabled: {
+        type: Boolean,
+        default: false
+      },
+      plugins: {
+        type: [String, Array],
+        default: 'lists image media table wordcount'
+      },
+      toolbar: {
+        type: [String, Array],
+        default: 'undo redo |  formatselect | bold italic forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | lists image media table | removeformat'
       }
     },
     data() {
       return {
         hasChange: false,
         hasInit: false,
-        tinymceId: this.id || 'vue-tinymce-' + +new Date()
+        tinymceId: this.id || 'vue-tinymce-' + +new Date(),
+        init: {
+          language_url: '/tinymce/langs/zh_CN.js',
+          language: 'zh_CN',
+          skin_url: '/tinymce/skins/ui/oxide',
+          // skin_url: '/tinymce/skins/ui/oxide-dark',//暗色系
+          height: 300,
+          plugins: this.plugins,
+          toolbar: this.toolbar,
+          branding: false,
+          menubar: false,
+          // 此处为图片上传处理函数，这个直接用了base64的图片形式上传图片，
+          // 如需ajax上传可参考https://www.tiny.cloud/docs/configure/file-image-upload/#images_upload_handler
+          images_upload_handler: (blobInfo, success, failure) => {
+            const img = 'data:image/jpeg;base64,' + blobInfo.base64()
+            success(img)
+          }
+        },
+        myValue: this.value
       }
     },
     watch: {
-      value(val) {
-        if (!this.hasChange && this.hasInit) {
-          this.$nextTick(() => window.tinymce.get(this.tinymceId).setContent(val))
-        }
+      value (newValue) {
+        this.myValue = newValue
+      },
+      myValue (newValue) {
+        this.$emit('input', newValue)
       }
     },
     mounted() {
@@ -94,44 +110,14 @@
     deactivated() {
       this.destroyTinymce()
     },
+
     methods: {
       initTinymce() {
         console.error("tinymce initTinymce this.toolbar.length" + this.toolbar.length)
-        const _this = this
-        window.tinymce.init({
-          selector: `#${this.tinymceId}`,
-          document_base_url: '../../../static/tinymce4.7.5',
-          width: this.width,
-          height: this.height,
-          skin_url: '../../../static/tinymce4.7.5/skins/lightgray',
-          language: 'zh_CN',
-          language_url: '../../../static/tinymce4.7.5/langs/zh_CN',
-          body_class: 'panel-body ',
-          object_resizing: false,
-          toolbar: this.toolbar.length > 0 ? this.toolbar : toolbar,
-          menubar: false,
-          plugins: plugins,
-          end_container_on_empty_block: true,
-          powerpaste_word_import: 'clean',
-          code_dialog_height: 450,
-          code_dialog_width: 1000,
-          advlist_bullet_styles: 'square',
-          advlist_number_styles: 'default',
-          imagetools_cors_hosts: ['www.tinymce.com', 'codepen.io'],
-          default_link_target: '_blank',
-          link_title: false,
-          suffix: '.min',
-          init_instance_callback: editor => {
-            if (_this.value) {
-              editor.setContent(_this.value)
-            }
-            _this.hasInit = true
-            editor.on('NodeChange Change KeyUp SetContent', () => {
-              this.hasChange = true
-              this.$emit('input', editor.getContent())
-            })
-          }
-        })
+        tinymce.init({})
+      },
+      onClick (e) {
+        this.$emit('onClick', e, tinymce)
       },
       destroyTinymce() {
         if (window.tinymce.get(this.tinymceId)) {
