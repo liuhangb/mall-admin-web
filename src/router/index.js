@@ -20,6 +20,7 @@ export const constantRoutes = [
     {
         path: '/commodity',
         name: 'Commodity',
+        redirect: '/commodity/commodityList',
         component: Layout,
         children: [{
             path: 'commodityList',
@@ -88,6 +89,7 @@ export const constantRoutes = [
     {
         path: '/order',
         name: 'Order',
+        redirect: '/order/orderList',
         component: Layout,
         children: [{
             path: 'orderList',
@@ -136,6 +138,7 @@ export const constantRoutes = [
     }, {
         path: '/marketing',
         name: 'Marketing',
+        redirect: '/marketing/advertisingList',
         component: Layout,
         meta: {title: '营销', icon: 'marketing'},
         children: [{
