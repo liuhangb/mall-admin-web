@@ -1,29 +1,9 @@
-# vue-admin-example
+# mall-admin-web
 
-## Project setup
-```
-npm install
-```
+## master分支 ##
+	vue入门练习：参考https://github.com/PanJiaChen/vue-admin-template
+## develop分支 ##
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Run your tests
-```
-npm run test
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+	vue入门练习：基于Vue Cli3.0+ 重新配置项目https://github.com/macrozheng/mall-admin-web
+	
+	
